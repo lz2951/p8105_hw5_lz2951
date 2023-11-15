@@ -84,3 +84,44 @@ homicide_prop |>
 
 # Problem 2
 
+```{r}
+file_names =
+  list.files(path = "./data/data")
+
+read_subject = function(file_name) {
+  path = str_c("./data/data/", file_name)
+  subject_data = read_csv(path)
+  
+  subject_data
+}
+```
+
+
+```{r}
+con_exp_df = 
+  tibble(
+  subject = file_names,
+  result = map(file_names, read_subject)
+  ) |>
+  unnest(result) |>
+  separate(subject, sep = "_", into = c("group", "subject")) |>
+  mutate(subject = sub("\\.csv", "", subject)) |>
+  select(subject, everything()) |>
+  pivot_longer(cols = week_1 : week_8, names_to = "week", values_to = "value") |>
+  mutate(week = sub("week_", "", week)) |>
+  mutate(week = as.numeric(week))
+```
+
+```{r}
+con_exp_df |>
+  ggplot(aes(x = week, y = value, color = subject, linetype = group )) +
+  geom_line()
+```
+
+# Problem 3
+
+```{r}
+
+```
+
+
